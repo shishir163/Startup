@@ -1,11 +1,5 @@
-// শুরুর পাতা: Firebase-এর তথ্য
-// Firebase Console → Project settings (⚙) → Your apps → Web app → "SDK setup and configuration" → Config
-// সেখানকার firebaseConfig-এর ভেতরের লেখাগুলো নিচের {} এর মধ্যে বসাও।
-// ফাঁকা (null) থাকলে পাতা আগের মতোই চলবে, তথ্য শুধু এই ডিভাইসে থাকবে।
-
-window.FIREBASE_CONFIG = null;
-
-/* বসানোর পর দেখতে এমন হবে (null-এর লাইনটা মুছে দিও):
+// শুরুর পাতা: Firebase-এর তথ্য (project: startup-38fcb)
+// এই তথ্যগুলো গোপন নয়। তোমার ডেটা সুরক্ষিত থাকে Firestore Rules দিয়ে।
 
 window.FIREBASE_CONFIG = {
   apiKey: "AIzaSyDV4_yygFHtD13WTxaN6-f969mwUBLTr5k",
@@ -15,5 +9,3 @@ window.FIREBASE_CONFIG = {
   messagingSenderId: "157873183478",
   appId: "1:157873183478:web:e818631992a3da37f52ad7"
 };
-
-*/
