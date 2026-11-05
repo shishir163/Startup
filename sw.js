@@ -1,5 +1,5 @@
 // শুরুর পাতা: অফলাইনেও খোলার জন্য ছোট service worker
-const CACHE = 'macstart-v4';
+const CACHE = 'macstart-v5';
 const ASSETS = ['./', 'index.html', 'manifest.json', 'icon.svg', 'firebase-config.js'];
 // ফন্ট আর Firebase-এর নির্দিষ্ট সংস্করণের ফাইল একবার নামলে অফলাইনেও থাকবে
 const CDN_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.gstatic.com'];

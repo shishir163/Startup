@@ -61,6 +61,12 @@ body.editing .wrap{padding-bottom:7rem}
 .pill svg{width:1rem;height:1rem;opacity:.8}
 .pill.on{background:linear-gradient(135deg,var(--c1),var(--c6));border-color:transparent;color:#fff}
 .ibtn{width:2.4rem;padding:0;justify-content:center;font-size:1.05rem;position:relative}
+#btnCloud{position:relative}
+#btnCloud.pill{width:auto;padding:0 1rem 0 .9rem;font-size:.88rem}
+#btnCloud .ctext{display:none}
+#btnCloud.pill .ctext{display:inline}
+#btnCloud[data-st=out]{border-color:color-mix(in oklab,var(--c1) 70%,var(--brd));background:color-mix(in oklab,var(--c1) 22%,var(--glass))}
+#btnCloud[data-st=nocfg] .cdot{background:transparent;box-shadow:0 0 0 1.5px var(--muted)}
 .cdot{position:absolute;top:.35rem;right:.35rem;width:.55rem;height:.55rem;border-radius:50%;background:var(--muted);box-shadow:0 0 0 2px var(--base)}
 #btnCloud[data-st=ok] .cdot{background:#22c55e;box-shadow:0 0 0 2px var(--base),0 0 8px #22c55e}
 #btnCloud[data-st=sync] .cdot,#btnCloud[data-st=pending] .cdot{background:#f59e0b;animation:blink 1s ease-in-out infinite alternate}
@@ -368,7 +374,7 @@ body.editing .toast{bottom:6.5rem}
     <button class="pill" id="btnSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span data-i18n="search"></span><kbd>⌘K</kbd></button>
     <div class="seg" id="langSeg" role="group" aria-label="Language"><button data-l="bn">বাং</button><button data-l="en">EN</button></div>
     <button class="pill" id="btnEdit"><span aria-hidden="true">✎</span><span data-i18n="arrange"></span></button>
-    <button class="ibtn" id="btnCloud" hidden><span aria-hidden="true">☁</span><span class="cdot"></span></button>
+    <button class="ibtn" id="btnCloud" hidden><span aria-hidden="true">☁</span><span class="ctext"></span><span class="cdot"></span></button>
     <button class="ibtn" id="btnSet" data-i18n-title="settings">⚙</button>
   </header>
 
@@ -649,7 +655,12 @@ const I18N = {
     cloud: 'ক্লাউড সিঙ্ক (Mac ও iPhone)', email: 'ইমেইল', password: 'পাসওয়ার্ড', login: 'লগইন করো', signup: 'নতুন অ্যাকাউন্ট খোলো', forgot: 'পাসওয়ার্ড ভুলে গেছ?',
     logout: 'লগআউট', syncNow: 'এখনই সিঙ্ক করো', signedAs: e => `লগইন করা আছে: ${e}`, signedIn: 'লগইন হয়েছে', loggedOut: 'লগআউট হয়েছে। তথ্য এই ডিভাইসে থেকে গেল।',
     resetSent: 'পাসওয়ার্ড বদলানোর লিঙ্ক ইমেইলে পাঠানো হলো', needEmail: 'আগে ইমেইল লেখো', pulled: 'ক্লাউড থেকে তথ্য আনা হলো',
-    cloudNoCfg: 'Firebase এখনো বসানো হয়নি। GitHub-এ firebase-config.js ফাইলে তোমার Firebase-এর তথ্য বসাও। ততক্ষণ সব তথ্য শুধু এই ডিভাইসে থাকবে।',
+    why: {
+      nofile: 'firebase-config.js ফাইলটা পাওয়া যায়নি। GitHub-এ index.html-এর পাশে, একই ফোল্ডারে ফাইলটা তোলো। তোলার পর ৫-১০ মিনিট লাগতে পারে।',
+      empty: 'firebase-config.js-এ এখনো null লেখা আছে, Firebase-এর তথ্য বসানো হয়নি। GitHub-এ ফাইলটা খুলে Firebase-এর config বসাও। তোলার পর ৫-১০ মিনিট লাগতে পারে।',
+      bad: 'firebase-config.js-এ apiKey বা projectId খুঁজে পাওয়া যায়নি। Firebase Console থেকে config আবার কপি করে বসাও।',
+      init: 'Firebase চালু করা গেল না। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করো।' },
+    retry: 'আবার চেষ্টা করো', loginPrompt: 'Mac আর iPhone মেলাতে একবার লগইন করো', cfgFound: p => `Firebase পাওয়া গেছে: ${p}`,
     cloudHint: 'Mac আর iPhone-এ একই ইমেইল দিয়ে লগইন করলে ডিউটি, কাজ, অ্যাপ, নোট সব মিলে যাবে। লেখার মাপ প্রতিটা ডিভাইসে আলাদা থাকে।',
     cloudPullConfirm: 'ক্লাউডে আগে থেকেই তোমার তথ্য আছে।\n\nOK চাপলে: ক্লাউডের তথ্য এই ডিভাইসে আসবে।\nCancel চাপলে: এই ডিভাইসের তথ্য ক্লাউডে যাবে।',
     cst: { off: 'বন্ধ', out: 'লগইন করা নেই', sync: 'সিঙ্ক হচ্ছে…', pending: 'পাঠানো হচ্ছে…', ok: 'সব সিঙ্ক হয়েছে', offline: 'অফলাইন, ইন্টারনেট এলে পাঠাবে', err: 'সিঙ্ক হয়নি', nocfg: 'বসানো নেই' },
@@ -702,7 +713,12 @@ const I18N = {
     cloud: 'Cloud sync (Mac & iPhone)', email: 'Email', password: 'Password', login: 'Log in', signup: 'Create account', forgot: 'Forgot password?',
     logout: 'Log out', syncNow: 'Sync now', signedAs: e => `Logged in as ${e}`, signedIn: 'Logged in', loggedOut: 'Logged out. Your data stays on this device.',
     resetSent: 'Password reset link sent to your email', needEmail: 'Type your email first', pulled: 'Brought your data from the cloud',
-    cloudNoCfg: "Firebase isn't set up yet. Put your Firebase details in firebase-config.js on GitHub. Until then, everything stays on this device only.",
+    why: {
+      nofile: "firebase-config.js wasn't found. Upload it on GitHub in the same folder as index.html. It can take 5-10 minutes to go live.",
+      empty: "firebase-config.js still says null, so the Firebase details aren't in yet. Open it on GitHub and paste your Firebase config. It can take 5-10 minutes to go live.",
+      bad: "Couldn't find apiKey or projectId in firebase-config.js. Copy the config from the Firebase console again and paste it.",
+      init: "Couldn't start Firebase. Check your internet connection and try again." },
+    retry: 'Try again', loginPrompt: 'Log in once to keep your Mac and iPhone in sync', cfgFound: p => `Firebase found: ${p}`,
     cloudHint: 'Log in with the same email on your Mac and iPhone and your duty, tasks, apps and notes stay in sync. Text size stays separate per device.',
     cloudPullConfirm: 'Your data is already in the cloud.\n\nOK: bring the cloud data to this device.\nCancel: send this device\'s data to the cloud.',
     cst: { off: 'Off', out: 'Not logged in', sync: 'Syncing…', pending: 'Sending…', ok: 'All synced', offline: "Offline, will send when you're back online", err: "Couldn't sync", nocfg: 'Not set up' },
@@ -1667,8 +1683,10 @@ const CLOUD = { A: null, F: null, auth: null, db: null, user: null, ref: null, u
 function setCloud(st) {
   CLOUD.st = st;
   const b = $('#btnCloud');
-  b.hidden = st === 'off' || st === 'nocfg';
+  b.hidden = st === 'off';
   b.dataset.st = st;
+  b.className = st === 'out' ? 'pill' : 'ibtn';
+  b.querySelector('.ctext').textContent = st === 'out' ? T('login') : '';
   b.title = `${T('cloud')}: ${T('cst')[st]}`; b.setAttribute('aria-label', b.title);
   const c = $('#cloudSt'); if (c) { c.dataset.st = st; c.textContent = T('cst')[st]; }
 }
@@ -1688,7 +1706,13 @@ function renderCloud() {
   const box = $('#cloudBox'); if (!box) return;
   box.replaceChildren();
   setCloud(CLOUD.st);
-  if (CLOUD.st === 'nocfg' || CLOUD.st === 'off') { box.append(el('p', { class: 'hint', style: 'margin:0' }, T('cloudNoCfg'))); return; }
+  if (!CLOUD.A) {
+    const why = CLOUD.st === 'nocfg' ? (CLOUD.why || 'empty') : 'init';
+    box.append(el('p', { class: 'hint', style: 'margin:0 0 .7rem;color:var(--text)' }, T('why')[why]),
+      el('button', { type: 'button', class: 'btn', onclick: () => cloudInit() }, T('retry')));
+    return;
+  }
+  box.append(el('p', { class: 'hint', style: 'margin:0 0 .7rem' }, T('cfgFound', CLOUD.project || '')));
   if (!CLOUD.user) {
     const em = el('input', { class: 'inp', id: 'cEmail', type: 'email', autocomplete: 'username', placeholder: T('email') });
     const pw = el('input', { class: 'inp', id: 'cPass', type: 'password', autocomplete: 'current-password', placeholder: T('password') });
@@ -1802,21 +1826,49 @@ function stopSync() {
   if (CLOUD.unsub) CLOUD.unsub();
   CLOUD.unsub = null; CLOUD.ref = null; clearTimeout(CLOUD.timer);
 }
+/* firebase-config.js যেভাবেই বসানো হোক (Firebase Console-এর পুরো লেখাসহ), apiKey ইত্যাদি খুঁজে নেয় */
+async function readConfig() {
+  const ok = c => c && typeof c === 'object' && c.apiKey && c.projectId;
+  const w = window.FIREBASE_CONFIG;
+  if (ok(w)) return { cfg: w };
+  try { if (typeof firebaseConfig !== 'undefined' && ok(firebaseConfig)) return { cfg: firebaseConfig }; } catch (e) {}
+  let txt;
+  try {
+    const r = await fetch('firebase-config.js?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return { why: 'nofile' };
+    txt = await r.text();
+  } catch (e) { return { why: w === null ? 'empty' : 'nofile' }; }
+  const code = txt.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+  const cfg = {};
+  ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId', 'measurementId'].forEach(k => {
+    const m = code.match(new RegExp('["\']?' + k + '["\']?\\s*:\\s*["\'`]([^"\'`]+)["\'`]'));
+    if (m) cfg[k] = m[1].trim();
+  });
+  if (ok(cfg)) return { cfg };
+  return { why: /FIREBASE_CONFIG\s*=\s*null/.test(code) && !/apiKey/.test(code) ? 'empty' : 'bad' };
+}
+let cloudStarted = false;
 async function cloudInit() {
-  const cfg = window.FIREBASE_CONFIG;
-  if (!cfg || typeof cfg !== 'object' || !cfg.apiKey || !cfg.projectId) { setCloud('nocfg'); return; }
+  if (CLOUD.A) { renderCloud(); return; }
+  const rc = await readConfig();
+  if (!rc.cfg) { CLOUD.why = rc.why; setCloud('nocfg'); renderCloud(); return; }
+  const cfg = rc.cfg;
+  CLOUD.project = cfg.projectId;
   try {
     const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
     const [app, A, F] = window.__fbMock || await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
     const fa = app.initializeApp(cfg);
     CLOUD.A = A; CLOUD.F = F; CLOUD.auth = A.getAuth(fa); CLOUD.db = F.getFirestore(fa);
     setCloud('out');
+    let first = true;
     A.onAuthStateChanged(CLOUD.auth, u => {
       CLOUD.user = u || null;
       if (u) startSync(); else { stopSync(); setCloud('out'); }
       if ($('#dlgSet').open) renderCloud();
+      if (first && !u && !$('#dlgSet').open) setTimeout(() => toast(T('loginPrompt'), T('login'), () => openSettings('cloud')), 900);
+      first = false;
     });
-  } catch (e) { setCloud(navigator.onLine === false ? 'offline' : 'err'); }
+  } catch (e) { CLOUD.A = null; setCloud(navigator.onLine === false ? 'offline' : 'err'); renderCloud(); }
 }
 window.addEventListener('online', () => { if (CLOUD.user) cloudSyncNow(); });
 
